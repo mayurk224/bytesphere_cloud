@@ -75,7 +75,9 @@ module.exports= {
   			}
   		},
   		fontFamily: {
-  			inter: ["var(--font-inter)"]
+  			inter: [
+  				'var(--font-inter)'
+  			]
   		},
   		boxShadow: {
   			'drop-1': '0px 10px 30px 0px rgba(66, 71, 97, 0.1)',

@@ -33,13 +33,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </section>
       <section className="flex flex-1 flex-col items-center bg-white p-4 py-10 lg:justify-center lg:p-10 lg:py-0">
         <div className="mb-16 lg:hidden">
-          <Image
-            src="/logo.png"
-            alt="logo"
-            width={82}
-            height={82}
-            className="h-auto w-[200px] lg:w-[250px]"
-          />
+        <div className="flex items-center gap-2">
+            <Image
+              src="/logo.png"
+              alt="logo"
+              width={82}
+              height={82}
+              className="h-auto"
+            />
+            <h1 className="h1">Byte Sphere</h1>
+          </div>
         </div>
         {children}
       </section>
