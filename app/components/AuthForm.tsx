@@ -19,6 +19,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { createAccount } from "@/lib/actions/user.actions";
+import OTPModal from "./OTPModal";
 
 type FormType = "sign-in" | "sign-up";
 
@@ -79,7 +80,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <div className="shad-form-item">
+                  <div className="shad-form-item relative">
                     <FormLabel className="shad-form-label">Full Name</FormLabel>
                     <FormControl>
                       <Input
@@ -101,7 +102,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <div className="shad-form-item">
+                <div className="shad-form-item relative">
                   <FormLabel className="shad-form-label">Email</FormLabel>
                   <FormControl>
                     <Input
@@ -151,6 +152,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
         </form>
       </Form>
       {/* otp */}
+
+      {accountId && (
+        <OTPModal email={form.getValues("email")} accountId={accountId} />
+      )}
     </>
   );
 };
