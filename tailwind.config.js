@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
+    darkMode: ["class"],
+    content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,7 +10,7 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
+  	extend: {
   		colors: {
   			brand: {
   				'100': '#EA6365',
@@ -73,7 +74,9 @@ module.exports = {
   			}
   		},
   		fontFamily: {
-  			poppins: ["var(--font-poppins)"]
+  			poppins: [
+  				'var(--font-poppins)'
+  			]
   		},
   		boxShadow: {
   			'drop-1': '0px 10px 30px 0px rgba(66, 71, 97, 0.1)',
@@ -98,7 +101,7 @@ module.exports = {
   		animation: {
   			'caret-blink': 'caret-blink 1.25s ease-out infinite'
   		}
-  	},
+  	}
   },
   plugins: [require("tailwindcss-animate")],
 }
