@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { navItems } from "@/constants";
 import { Button } from "@/components/ui/button";
 import FileUploader from "./FileUploader";
+import { signOutUser } from "@/lib/actions/user.actions";
 
 interface Props {
   ownerId: string;
@@ -105,7 +106,7 @@ const MobileNavigation = ({
               <Button
                 type="submit"
                 className="mobile-sign-out-button"
-                onClick={() => {}}
+                onClick={async() => await signOutUser()}
               >
                 <Image
                   src="/icons/logout.svg"
