@@ -78,7 +78,6 @@ export const getFiles = async () => {
 
     const queries = createQueries(currentUser);
 
-    
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
