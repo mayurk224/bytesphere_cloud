@@ -4,3 +4,8 @@ interface UploadFileProps {
   ownerId: string;
   path: string;
 }
+
+interface SearchParamProps {
+  params?: Promise<SegmentParams>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
