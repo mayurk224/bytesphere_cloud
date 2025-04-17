@@ -22,3 +22,9 @@ interface RenameFileProps {
   extension: string;
   path: string;
 }
+
+interface UpdateFileUsersProps {
+  fileId: string;
+  emails: string[];
+  path: string;
+}
