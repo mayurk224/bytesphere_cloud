@@ -1,0 +1,171 @@
+"use client";
+
+import React, { useState } from "react";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
+import { Models } from "node-appwrite";
+import { actionsDropdownItems } from "@/constants";
+import Link from "next/link";
+import { constructDownloadUrl } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+const ActionDropdown = ({ file }: { file: Models.Document }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [action, setAction] = useState<ActionType | null>(null);
+  const [name, setName] = useState(file.name);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const closeAllModals = () => {
+    setIsModalOpen(false);
+    setIsDropdownOpen(false);
+    setAction(null);
+    setName(file.name);
+  };
+
+  const handleAction = async () => {
+    setIsLoading(true);
+    try {
+      switch (action?.value) {
+        case "rename":
+          break;
+        case "details":
+          break;
+        case "share":
+          break;
+        case "delete":
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      closeAllModals();
+    }
+  };
+
+  const renderDialogContent = () => {
+    if (!action) return null;
+    const { value, label } = action;
+    return (
+      <DialogContent className="shad-dialog button">
+        <DialogHeader className="flex flex-col gap-3">
+          <DialogTitle className="text-center text-light-100">
+            {label}
+          </DialogTitle>
+          {value === "rename" && (
+            <Input
+              type="text"
+              placeholder="Enter new name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="rename-input-field"
+            />
+          )}
+        </DialogHeader>
+        {["rename", "share", "delete"].includes(value) && (
+          <DialogFooter className="flex-col flex gap-3 md:flex-row">
+            <Button onClick={closeAllModals} className="modal-cancel-button">
+              Cancel
+            </Button>
+            <Button onClick={handleAction} className="modal-submit-button">
+              <p className="capitalize">{value}</p>
+              {isLoading && (
+                <Image
+                  src="/icons/loader.svg"
+                  alt="loader"
+                  width={20}
+                  height={20}
+                  className="ml-2 animate-spin"
+                />
+              )}
+            </Button>
+          </DialogFooter>
+        )}
+      </DialogContent>
+    );
+  };
+  return (
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+        <DropdownMenuTrigger className="shad-no-focus">
+          <Image src="/icons/dots.svg" alt="menu" width={20} height={20} />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel className="max-w-[200px] truncate">
+            {file.name}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {actionsDropdownItems.map((actionItem) => (
+            <DropdownMenuItem
+              key={actionItem.value}
+              className="shad-dropdown-item"
+              onClick={() => {
+                setAction(actionItem);
+                if (
+                  ["rename", "details", "share", "delete"].includes(
+                    actionItem.value
+                  )
+                ) {
+                  setIsModalOpen(true);
+                }
+              }}
+            >
+              {actionItem.value === "download" ? (
+                <Link
+                  href={constructDownloadUrl(file.bucketFileId)}
+                  download={file.name}
+                  target="_blank"
+                  className="flex items-center gap-2"
+                >
+                  <Image
+                    src={actionItem.icon}
+                    alt={actionItem.label}
+                    width={16}
+                    height={16}
+                  />
+                  {actionItem.label}
+                </Link>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={actionItem.icon}
+                    alt={actionItem.label}
+                    width={16}
+                    height={16}
+                  />
+                  {actionItem.label}
+                </div>
+              )}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {renderDialogContent()}
+    </Dialog>
+  );
+};
+
+export default ActionDropdown;
