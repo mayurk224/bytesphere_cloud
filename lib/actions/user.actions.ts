@@ -102,8 +102,8 @@ export const getCurrentUser = async () => {
 
     return parseStringify(user.documents[0]);
   } catch (error) {
-    // Optional: console.log("No active session", error);
-    return null; // Safely return null if no session exists
+    console.log("No active session", error);
+    return null;
   }
 };
 
