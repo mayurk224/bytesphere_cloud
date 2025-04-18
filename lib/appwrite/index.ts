@@ -11,7 +11,10 @@ export const createSessionClient = async () => {
 
   const session = (await cookies()).get("appwrite_session");
 
-  if (!session || !session.value) throw new Error("Session not found");
+  if (!session || !session.value) {
+    console.error("Session not found. Redirecting to login.");
+    throw new Error("Session not found. Please log in again.");
+  }
 
   client.setSession(session.value);
 
@@ -21,6 +24,9 @@ export const createSessionClient = async () => {
     },
     get databases() {
       return new Databases(client);
+    },
+    get storage() {
+      return new Storage(client);
     },
   };
 };
