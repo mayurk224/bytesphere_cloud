@@ -111,7 +111,7 @@ export const signOutUser = async () => {
   const { account } = await createSessionClient();
   try {
     await account.deleteSession("current");
-    (await cookies()).delete("appwrite-session");
+    (await cookies()).delete("appwrite_session");
   } catch (error) {
     handleError(error, "Failed to sign out user");
   } finally {

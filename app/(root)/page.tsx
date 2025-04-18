@@ -9,6 +9,8 @@ import FormattedDateTime from "../components/FormattedDateTime";
 import Thumbnail from "../components/Thumbnail";
 import ActionDropdown from "../components/ActionDropdown";
 
+export const dynamic = "force-dynamic";
+
 const Dashboard = async () => {
   // Parallel requests
   const [files, totalSpace] = await Promise.all([
