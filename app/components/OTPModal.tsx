@@ -109,7 +109,7 @@ const OTPModal = ({
             </AlertDialogAction>
             <div className="subtitle-2 mt-2 text-center text-light-100">
               <p className="body-2 text-center text-light-100">
-                Didn't receive the OTP?{" "}
+                Didn&apos;t receive the OTP?{" "}
                 <span
                   className="text-brand cursor-pointer"
                   onClick={handleResendOtp}

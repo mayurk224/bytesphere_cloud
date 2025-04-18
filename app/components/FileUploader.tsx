@@ -31,7 +31,7 @@ const FileUploader: React.FC<Props> = ({ ownerId, accountId, className }) => {
           setFiles((prevFiles) =>
             prevFiles.filter((f) => f.name !== file.name)
           );
-
+  
           return toast({
             title: "File size too large",
             description: (
@@ -58,7 +58,7 @@ const FileUploader: React.FC<Props> = ({ ownerId, accountId, className }) => {
       });
       await Promise.all(uploadPromises);
     },
-    [ownerId, accountId, path]
+    [ownerId, accountId, path, toast]
   );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });

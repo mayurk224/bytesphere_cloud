@@ -43,3 +43,26 @@ interface GetFilesProps {
   sort?: string;
   limit?: number;
 }
+
+interface TotalSpace {
+  document: {
+    size: number;
+    latestDate: string;
+  };
+  image: {
+    size: number;
+    latestDate: string;
+  };
+  video: {
+    size: number;
+    latestDate: string;
+  };
+  audio: {
+    size: number;
+    latestDate: string;
+  };
+  other: {
+    size: number;
+    latestDate: string;
+  };
+}
