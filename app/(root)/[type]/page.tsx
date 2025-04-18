@@ -7,7 +7,7 @@ import React from "react";
 
 export const dynamic = "force-dynamic";
 
-const Page = async ({searchParams, params }: SearchParamProps) => {
+const Page = async ({ searchParams, params }: SearchParamProps) => {
   const type = ((await params)?.type as string) || "";
 
   const types = getFileTypesParams(type) as FileType[];
@@ -24,7 +24,7 @@ const Page = async ({searchParams, params }: SearchParamProps) => {
         <h1 className="h1 capitalize">{type}</h1>
         <div className="total-size-section">
           <p className="body-1">
-            Total: <span>{ files.total }</span>
+            Total: <span>{files.total}</span>
           </p>
           <div className="sort-container">
             <p className="body-1 hidden sm:block text-light-200">Sort by:</p>
