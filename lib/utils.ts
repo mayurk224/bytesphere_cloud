@@ -80,16 +80,20 @@ export const formatDateTime = (isoString: string | null | undefined) => {
 
   const date = new Date(isoString);
 
-  // Format the time and date parts using locale strings
-  const time = date.toLocaleTimeString("en-US", {
+  const time = date.toLocaleTimeString("en-IN", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
+    timeZone: "Asia/Kolkata", // Convert to IST
   });
-  const day = date.getDate();
-  const month = date.toLocaleDateString("en-US", { month: "short" });
 
-  return `${time}, ${day} ${month}`;
+  const day = date.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    timeZone: "Asia/Kolkata", // Convert to IST
+  });
+
+  return `${time}, ${day}`;
 };
 
 export const getFileIcon = (extension: string | undefined, type: string) => {
