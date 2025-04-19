@@ -67,7 +67,7 @@ const Search = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
         {open && (
-          <ul className="search-results">
+          <ul className="search-result">
             {result.length > 0 ? (
               result.map((file) => (
                 <li
@@ -80,7 +80,7 @@ const Search = () => {
                       type={file.type}
                       extension={file.extension}
                       url={file.url}
-                      className="!size-9 min-w-9"
+                      className=""
                     />
                     <p className="subtitle-2 line-clamp-1 text-light-100">
                       {file.name}
