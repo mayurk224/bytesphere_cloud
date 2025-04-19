@@ -13,8 +13,8 @@ module.exports = {
   	extend: {
   		colors: {
   			brand: {
-  				'100': '#EA6365',
-  				DEFAULT: '#FA7275'
+  				'100': '#637eea',
+  				DEFAULT: '#637eea'
   			},
   			red: '#FF7474',
   			error: '#b80000',

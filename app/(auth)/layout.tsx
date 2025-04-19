@@ -15,7 +15,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <p>this is the place you can store your all files</p>
           </div>
           <Image
-            src="/illustration.png"
+            src="/images/files.png"
             alt=""
             height={342}
             width={342}

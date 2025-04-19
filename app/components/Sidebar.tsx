@@ -19,13 +19,16 @@ const Sidebar = ({ fullName, email, avatar }: Props) => {
   return (
     <aside className="sidebar">
       <Link href="/">
+        <div className="flex gap-2 items-center">
         <Image
-          src="/icons/logo-full-brand.svg"
+          src="/logo.png"
           alt="logo"
-          width={160}
+          width={50}
           height={50}
           className="h-auto lg:block hidden"
         />
+        <p className="h2 lg:block hidden text-brand">ByteSphere</p>
+        </div>
         <Image
           src="/icons/logo-brand.svg"
           alt="logo"
