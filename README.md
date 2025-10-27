@@ -2,6 +2,8 @@
 
 ByteSphere Cloud is a modern cloud storage solution built with Next.js and Appwrite. It provides a secure and user-friendly platform for storing, managing, and sharing various types of files.
 
+![ByteSphere - Cloud Storage](https://github.com/mayurk224/bytesphere_cloud/blob/main/public/images/ByteSphere%20-%20preview.png?raw=true)
+
 ## Features
 
 - **Secure Authentication**: Email-based OTP authentication system
