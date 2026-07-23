@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface Props {
   fullName: string;
@@ -13,12 +13,42 @@ interface Props {
   avatar: string;
 }
 
-const Sidebar = ({ fullName, email, avatar }: Props) => {
+const Sidebar = React.memo(({ fullName, email, avatar }: Props) => {
   const pathname = usePathname();
+
+  const navLinks = useMemo(() => {
+    return navItems.map(({ url, name, icon }) => (
+      <Link
+        href={url}
+        key={name}
+        className={`sidebar-nav-item lg:w-full`}
+        prefetch
+      >
+        <li
+          className={cn(
+            "sidebar-nav-item",
+            pathname === url && "shad-active"
+          )}
+        >
+          <Image
+            src={icon}
+            alt={name}
+            width={20}
+            height={20}
+            className={cn(
+              "nav-icon",
+              pathname === url && "nav-icon-active"
+            )}
+          />
+          <span className="hidden lg:block">{name}</span>
+        </li>
+      </Link>
+    ));
+  }, [pathname]);
 
   return (
     <aside className="sidebar">
-      <Link href="/">
+      <Link href="/" prefetch>
         <div className="flex gap-2 items-center">
         <Image
           src="/logo.png"
@@ -40,32 +70,7 @@ const Sidebar = ({ fullName, email, avatar }: Props) => {
 
       <nav className="sidebar-nav">
         <ul className="flex flex-1 flex-col gap-6">
-          {navItems.map(({ url, name, icon }) => (
-            <Link
-              href={url}
-              key={name}
-              className={`sidebar-nav-item lg:w-full`}
-            >
-              <li
-                className={cn(
-                  "sidebar-nav-item",
-                  pathname === url && "shad-active"
-                )}
-              >
-                <Image
-                  src={icon}
-                  alt={name}
-                  width={20}
-                  height={20}
-                  className={cn(
-                    "nav-icon",
-                    pathname === url && "nav-icon-active"
-                  )}
-                />
-                <span className="hidden lg:block">{name}</span>
-              </li>
-            </Link>
-          ))}
+          {navLinks}
         </ul>
       </nav>
 
@@ -91,6 +96,7 @@ const Sidebar = ({ fullName, email, avatar }: Props) => {
       </div>
     </aside>
   );
-};
+});
 
+Sidebar.displayName = "Sidebar";
 export default Sidebar;

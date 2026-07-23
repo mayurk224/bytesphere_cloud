@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import {
   Sheet,
@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { navItems } from "@/constants";
@@ -25,7 +26,7 @@ interface Props {
   email: string;
 }
 
-const MobileNavigation = ({
+const MobileNavigation = React.memo(({
   fullName,
   avatar,
   email,
@@ -33,7 +34,51 @@ const MobileNavigation = ({
   $id: ownerId,
 }: Props) => {
   const [open, setOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const pathname = usePathname();
+
+  const handleSignOut = useCallback(async () => {
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+    try {
+      await signOutUser();
+    } catch (error) {
+      console.error("Failed to sign out", error);
+      setIsSigningOut(false);
+    }
+  }, [isSigningOut]);
+
+  const handleLinkClick = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const navLinks = useMemo(() => {
+    return navItems.map(({ url, name, icon }) => (
+      <Link
+        href={url}
+        key={name}
+        onClick={handleLinkClick}
+        prefetch
+      >
+        <li
+          className={`mobile-nav-item ${
+            pathname === url && "shad-active"
+          }`}
+        >
+          <Image
+            src={icon}
+            alt={name}
+            width={20}
+            height={20}
+            className={`nav-icon ${
+              pathname === url && "nav-icon-active"
+            }`}
+          />
+          <span>{name}</span>
+        </li>
+      </Link>
+    ));
+  }, [pathname, handleLinkClick]);
 
   return (
     <header className="mobile-header">
@@ -77,25 +122,7 @@ const MobileNavigation = ({
             </SheetTitle>
             <nav className="mobile-nav">
               <ul className="mobile-nav-list">
-                {navItems.map(({ url, name, icon }) => (
-                  <li
-                    key={name}
-                    className={`mobile-nav-item ${
-                      pathname === url && "shad-active"
-                    }`}
-                  >
-                    <Image
-                      src={icon}
-                      alt={name}
-                      width={20}
-                      height={20}
-                      className={`nav-icon ${
-                        pathname === url && "nav-icon-active"
-                      }`}
-                    />
-                    <span>{name}</span>
-                  </li>
-                ))}
+                {navLinks}
               </ul>
             </nav>
             <Separator className="my-4 bg-light-200/20" />
@@ -103,17 +130,35 @@ const MobileNavigation = ({
             <div className="flex flex-col justify-between gap-5 pb-5">
               <FileUploader ownerId={ownerId} accountId={accountId} />
               <Button
-                type="submit"
+                type="button"
                 className="mobile-sign-out-button"
-                onClick={async () => await signOutUser()}
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                aria-disabled={isSigningOut}
               >
-                <Image
-                  src="/icons/logout.svg"
-                  alt="logout"
-                  width={20}
-                  height={20}
-                />
-                Sign Out
+                {isSigningOut ? (
+                  <>
+                    <Image
+                      src="/icons/loader-brand.svg"
+                      alt="signing out"
+                      width={20}
+                      height={20}
+                      className="animate-spin"
+                      aria-hidden="true"
+                    />
+                    <span>Sign Out</span>
+                  </>
+                ) : (
+                  <>
+                    <Image
+                      src="/icons/logout.svg"
+                      alt="logout"
+                      width={20}
+                      height={20}
+                    />
+                    Sign Out
+                  </>
+                )}
               </Button>
             </div>
           </SheetHeader>
@@ -121,6 +166,7 @@ const MobileNavigation = ({
       </Sheet>
     </header>
   );
-};
+});
 
+MobileNavigation.displayName = "MobileNavigation";
 export default MobileNavigation;

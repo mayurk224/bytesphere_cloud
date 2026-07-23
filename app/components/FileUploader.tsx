@@ -18,7 +18,7 @@ interface Props {
   className?: string;
 }
 
-const FileUploader: React.FC<Props> = ({ ownerId, accountId, className }) => {
+const FileUploader = React.memo(({ ownerId, accountId, className }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { toast } = useToast();
   const path = usePathname();
@@ -126,6 +126,7 @@ const FileUploader: React.FC<Props> = ({ ownerId, accountId, className }) => {
       )}
     </div>
   );
-};
+});
 
+FileUploader.displayName = "FileUploader";
 export default FileUploader;

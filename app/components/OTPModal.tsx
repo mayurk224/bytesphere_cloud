@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { cn } from "@/lib/utils";
 
 import {
   AlertDialog,
@@ -33,9 +34,14 @@ const OTPModal = ({
   const [isOpen, setIsOpen] = useState(true);
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (isLoading) return;
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       const sessionId = await verifySecret({
         accountId,
@@ -43,14 +49,25 @@ const OTPModal = ({
       });
       if (sessionId) router.push("/");
     } catch (error) {
-      console.log("Failed to verify otp", error);
+      console.error("Failed to verify otp", error);
+      setErrorMessage("Failed to verify OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleResendOtp = async () => {
-    await sendEmailOTP({ email });
+    if (isResending) return;
+    setIsResending(true);
+    setErrorMessage(null);
+    try {
+      await sendEmailOTP({ email });
+    } catch (error) {
+      console.error("Failed to resend OTP", error);
+      setErrorMessage("Failed to resend OTP. Please try again.");
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (
@@ -64,7 +81,7 @@ const OTPModal = ({
               alt="close"
               width={20}
               height={20}
-              className="otp-close-button "
+              className="otp-close-button"
               onClick={() => setIsOpen(false)}
             />
           </AlertDialogTitle>
@@ -79,6 +96,8 @@ const OTPModal = ({
           pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
           value={password}
           onChange={setPassword}
+          disabled={isLoading || isResending}
+          aria-disabled={isLoading || isResending}
         >
           <InputOTPGroup className="shad-otp">
             <InputOTPSlot index={0} className="shad-otp-slot" />
@@ -90,31 +109,63 @@ const OTPModal = ({
           </InputOTPGroup>
         </InputOTP>
 
+        {errorMessage && (
+          <p className="text-red-500 text-center text-sm mt-2">
+            {errorMessage}
+          </p>
+        )}
+
         <AlertDialogFooter>
           <div className="flex w-full flex-col gap-4">
             <AlertDialogAction
               className="shad-submit-btn h-12"
               onClick={handleSubmit}
+              disabled={isLoading || isResending || password.length < 6}
+              aria-disabled={isLoading || isResending || password.length < 6}
+              aria-busy={isLoading}
             >
-              Continue
-              {isLoading && (
-                <Image
-                  src="/icons/loader.svg"
-                  alt="loader"
-                  width={20}
-                  height={20}
-                  className="ml-2 animate-spin"
-                />
+              {isLoading ? (
+                <>
+                  Verifying...
+                  <Image
+                    src="/icons/loader.svg"
+                    alt="loader"
+                    width={20}
+                    height={20}
+                    className="ml-2 animate-spin"
+                    aria-hidden="true"
+                  />
+                </>
+              ) : (
+                "Continue"
               )}
             </AlertDialogAction>
             <div className="subtitle-2 mt-2 text-center text-light-100">
               <p className="body-2 text-center text-light-100">
                 Didn&apos;t receive the OTP?{" "}
                 <span
-                  className="text-brand cursor-pointer"
-                  onClick={handleResendOtp}
+                  className={cn(
+                    "text-brand cursor-pointer",
+                    (isLoading || isResending) && "opacity-50 cursor-not-allowed"
+                  )}
+                  onClick={!isLoading && !isResending ? handleResendOtp : undefined}
+                  aria-disabled={isLoading || isResending}
                 >
-                  Resend OTP
+                  {isResending ? (
+                    <>
+                      <Image
+                        src="/icons/loader.svg"
+                        alt="sending..."
+                        width={16}
+                        height={16}
+                        className="inline-block mr-1 animate-spin"
+                        aria-hidden="true"
+                      />
+                      Sending...
+                    </>
+                  ) : (
+                    "Resend OTP"
+                  )}
                 </span>
               </p>
             </div>

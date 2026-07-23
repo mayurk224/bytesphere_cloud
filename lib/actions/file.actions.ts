@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from "react";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { InputFile } from "node-appwrite/file";
 import { appwriteConfig } from "../appwrite/config";
@@ -88,7 +89,7 @@ const createQueries = (
   return queries;
 };
 
-export const getFiles = async ({
+export const getFiles = cache(async ({
   types = [],
   searchText = "",
   sort = "$createdAt-desc",
@@ -112,7 +113,7 @@ export const getFiles = async ({
   } catch (error) {
     handleError(error, "Failed to get files");
   }
-};
+});
 
 export const renameFile = async ({
   fileId,
@@ -167,22 +168,20 @@ export const deleteFile = async ({
 }: DeleteFileProps) => {
   const { databases, storage } = await createAdminClient();
   try {
-    const deletedFile = await databases.deleteDocument(
+    await databases.deleteDocument(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
       fileId
     );
-    if (deletedFile) {
-      await storage.deleteFile(appwriteConfig.bucketsId, bucketFileId);
-    }
+    await storage.deleteFile(appwriteConfig.bucketsId, bucketFileId);
     revalidatePath(path);
     return parseStringify({ success: true });
   } catch (error) {
-    handleError(error, "Failed to update file users");
+    handleError(error, "Failed to delete file");
   }
 };
 
-export async function getTotalSpaceUsed() {
+export const getTotalSpaceUsed = cache(async function getTotalSpaceUsed() {
   try {
     const { databases } = await createSessionClient();
     const currentUser = await getCurrentUser();
@@ -221,4 +220,4 @@ export async function getTotalSpaceUsed() {
   } catch (error) {
     handleError(error, "Error calculating total space used:, ");
   }
-}
+});

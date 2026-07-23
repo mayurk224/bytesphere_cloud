@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from "react";
 import { ID, Query } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
@@ -29,7 +30,7 @@ export const sendEmailOTP = async ({ email }: { email: string }) => {
     const session = await account.createEmailToken(ID.unique(), email);
     return session.userId;
   } catch (error) {
-    handleError(error, "Faild to send otp");
+    handleError(error, "Failed to send otp");
   }
 };
 
@@ -86,7 +87,7 @@ export const verifySecret = async ({
   }
 };
 
-export const getCurrentUser = async () => {
+export const getCurrentUser = cache(async () => {
   try {
     const { databases, account } = await createSessionClient();
 
@@ -105,7 +106,7 @@ export const getCurrentUser = async () => {
     console.log("No active session", error);
     return null;
   }
-};
+});
 
 export const signOutUser = async () => {
   const { account } = await createSessionClient();
@@ -121,12 +122,12 @@ export const signOutUser = async () => {
 
 export const signInUser = async ({ email }: { email: string }) => {
   try {
-    const existingUser = await sendEmailOTP({ email });
-    if (existingUser) {
-      await sendEmailOTP({ email });
-      return parseStringify({ accountId: existingUser });
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser) {
+      return parseStringify({ accountId: null, error: "User not found" });
     }
-    return parseStringify({ accountId: null, error: "User not found" });
+    const accountId = await sendEmailOTP({ email });
+    return parseStringify({ accountId });
   } catch (error) {
     handleError(error, "Failed to sign in user");
   }

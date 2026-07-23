@@ -5,7 +5,7 @@ import { getFileTypesParams } from "@/lib/utils";
 import { Models } from "node-appwrite";
 import React from "react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30; // 30 seconds
 
 const Page = async ({ searchParams, params }: SearchParamProps) => {
   const type = ((await params)?.type as string) || "";
